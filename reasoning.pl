@@ -2,8 +2,8 @@
     [
     price_factor/2,
     visit_time_factor/2,
-    climate_factor/2,
-    activities_for_children_factor/2,
+    climate_factor/3,
+    children_activities_factor/2,
     tourists_visiting_factor/2,
     age_limit_factor/3,
     has_meal_factor/3,
@@ -35,7 +35,7 @@ cheap_price_range(Place, Factor) :-
     (
         Price < 100 -> Factor is 1;
         Factor is 0
-    )
+    ).
 
 medium_price_range(Place, Factor) :-
     db:price(Place, Price),
@@ -63,14 +63,14 @@ visit_time_factor(Place, Factor) :-
         [ShortFactor, MediumFactor, LongFactor],
         [ShortMappedFactor, MediumMappedFactor, LongMappedFactor],
         Factor
-    )
+    ).
 
 short_visit_time(Place, Factor) :-
     db:visit_time(Place, Time),
     (
         Time < 200 -> Factor is 1;
         Factor is 0
-    )
+    ).
 
 medium_visit_time(Place, Factor) :-
     db:visit_time(Place, Time),
@@ -105,14 +105,14 @@ children_activities_factor(Place, Factor) :-
         [FewFactor, SomeFactor, ManyFactor],
         [FewMappedFactor, SomeMappedFactor, ManyMappedFactor],
         Factor
-    )
+    ).
 
 few_children_activities_range(Place, Factor) :-
     db:activities_for_children(Place, Quantity),
     (
         Quantity < 10 -> Factor is 1;
         Factor is 0
-    )
+    ).
 
 some_children_activities_range(Place, Factor) :-
     db:activities_for_children(Place, Quantity),
@@ -140,14 +140,14 @@ tourists_visiting_factor(Place, Factor) :-
         [FewFactor, SomeFactor, ManyFactor],
         [FewMappedFactor, SomeMappedFactor, ManyMappedFactor],
         Factor
-    )
+    ).
 
 few_tourists_visiting_range(Place, Factor) :-
     db:tourists_visiting(Place, Quantity),
     (
         Quantity < 50 -> Factor is 1;
         Factor is 0
-    )
+    ).
 
 some_tourists_visiting_range(Place, Factor) :-
     db:tourists_visiting(Place, Quantity),
@@ -162,81 +162,6 @@ many_tourists_visiting_range(Place, Factor) :-
         Quantity >= 500 -> Factor is 1;
         Factor is 0
     ).
-
-/* Age limit*/
-age_limit_factor(Place, Factor) :-
-(
-    no_age_limit(Place, NoFactor),
-    teens_age_limit(Place, TeensFactor),
-    with_adults_age_limit(Place, WithAdultsFactor),
-    adults_age_limit(Place, AdultsFactor),
-    map_age_limit_to_factor(no_limit, NoMappedFactor),
-    map_age_limit_to_factor(teens, TeensMappedFactor)
-    map_age_limit_to_factor(with_adults, WithAdultsMappedFactor)
-    map_age_limit_to_factor(adults, AdultsMappedFactor),
-    sharpen(
-        [NoFactor, TeensFactor, WithAdultsFactor, AdultsFactor],
-        [NoMappedFactor, TeensMappedFactor, WithAdultsMappedFactor, AdultsMappedFactor],
-        Factor
-    ).
-).
-
-no_age_limit(Place, Factor) :- 
-(
-    db:age_limit(Place, brak) -> Factor is 1;
-    Factor is 0
-).
-
-teens_age_limit(Place, Factor) :-
-(
-    db:age_limit(Place, nastolatkowie) -> Factor is 1;
-    Factor is 0
-).
-
-with_adults_age_limit(Place, Factor) :-
-(
-    db:age_limit(Place, z_rodzicem) -> Factor is 1;
-    Factor is 0
-).
-
-adults_age_limit(Place, Factor) :-
-(
-    db:age_limit(Place, dorosli) -> Factor is 1;
-    Factor is 0
-).
-
-/* Age limit version 2*/
-age_limit_factor(AgeLimit, Place, Factor) :-
-(
-    AgeLimit == brak -> no_age_limit(Place, Factor);
-    AgeLimit == nastolatkowie -> teens_age_limit(Place, Factor);
-    AgeLimit == z_rodzicem -> with_adults_age_limit(Place, Factor);
-    AgeLimit == dorosli -> adults_age_limit(Place, Factor);
-).
-
-no_age_limit(Place, Factor) :- 
-(
-    db:age_limit(Place, brak) -> Factor is 1;
-    Factor is 0
-).
-
-teens_age_limit(Place, Factor) :-
-(
-    db:age_limit(Place, nastolatkowie) -> Factor is 1;
-    Factor is 0
-).
-
-with_adults_age_limit(Place, Factor) :-
-(
-    db:age_limit(Place, z_rodzicem) -> Factor is 1;
-    Factor is 0
-).
-
-adults_age_limit(Place, Factor) :-
-(
-    db:age_limit(Place, dorosli) -> Factor is 1;
-    Factor is 0
-).
 
 /* Age limit version 3 */
 age_limit_factor(AgeLimit, Place, Factor) :-
