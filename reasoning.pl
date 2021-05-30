@@ -6,11 +6,11 @@
     children_activities_factor/2,
     tourists_visiting_factor/2,
     age_limit_factor/3,
-    has_meal_factor/3,
-    has_rooms_too_sleep_factor/3,
-    has_toilet_factor/3,
-    has_parking_factor/3,
-    adjusted_for_disabled_factor/3
+    has_meal_factor/2,
+    has_rooms_to_sleep_factor/2,
+    has_toilet_factor/2,
+    has_parking_factor/2,
+    adjusted_for_disabled_factor/2
     ]).
 
 :- use_module(variables).
@@ -34,19 +34,23 @@ cheap_price_range(Place, Factor) :-
     db:price(Place, Price),
     (
         Price < 100 -> Factor is 1;
+        Price >= 100, Price < 200 -> triangle_down(100, 200, Price, Factor);
         Factor is 0
     ).
 
 medium_price_range(Place, Factor) :-
     db:price(Place, Price),
     (
-        Price >= 400, Price < 600 -> Factor is 1;
+        Price >= 100, Price < 200 -> triangle_up(100, 200, Price, Factor);
+        Price >= 200, Price < 400 -> Factor is 1;
+        Price >= 400, Price < 600 -> triangle_down(400, 600, Price, Factor);
         Factor is 0
     ).
 
 expensive_price_range(Place, Factor) :- 
     db:price(Place, Price),
     (
+        Price >= 400, Price < 600 -> triangle_up(400, 600, Price, Factor);
         Price >= 600 -> Factor is 1;
         Factor is 0
     ).
@@ -68,21 +72,25 @@ visit_time_factor(Place, Factor) :-
 short_visit_time(Place, Factor) :-
     db:visit_time(Place, Time),
     (
-        Time < 200 -> Factor is 1;
+        Time < 300 -> Factor is 1;
+        Time >= 300, Time < 600 -> triangle_down(300, 600, Time, Factor);
         Factor is 0
     ).
 
 medium_visit_time(Place, Factor) :-
     db:visit_time(Place, Time),
     (
-        Time >= 200, Time < 2000 -> Factor is 1;
+        Time >= 300, Time < 600 -> triangle_up(300, 600, Time, Factor);
+        Time >= 600, Time < 1500 -> Factor is 1;
+        Time >= 1500, Time < 3000 -> triangle_down(1500, 3000, Time, Factor);
         Factor is 0
     ).
 
 long_visit_time(Place, Factor) :- 
     db:visit_time(Place, Time),
     (
-        Time >= 2000 -> Factor is 1;
+        Time >= 1500, Time < 3000 -> triangle_up(1500, 3000, Time, Factor);
+        Time >= 3000 -> Factor is 1;
         Factor is 0
     ).
 
@@ -110,21 +118,25 @@ children_activities_factor(Place, Factor) :-
 few_children_activities_range(Place, Factor) :-
     db:activities_for_children(Place, Quantity),
     (
-        Quantity < 10 -> Factor is 1;
+        Quantity < 5 -> Factor is 1;
+        Quantity >= 5, Quantity < 10 -> triangle_down(5, 10, Quantity, Factor);
         Factor is 0
     ).
 
 some_children_activities_range(Place, Factor) :-
     db:activities_for_children(Place, Quantity),
     (
+        Quantity >= 5, Quantity < 10 -> triangle_up(5, 10, Quantity, Factor);
         Quantity >= 10, Quantity < 20 -> Factor is 1;
+        Quantity >= 20, Quantity < 25 -> triangle_down(20, 25, Quantity, Factor);
         Factor is 0
     ).
 
 many_children_activities_range(Place, Factor) :- 
     db:activities_for_children(Place, Quantity),
     (
-        Quantity >= 20 -> Factor is 1;
+        Quantity >= 20, Quantity < 25 -> triangle_up(20, 25, Quantity, Factor);
+        Quantity >= 25 -> Factor is 1;
         Factor is 0
     ).
 
@@ -146,24 +158,28 @@ few_tourists_visiting_range(Place, Factor) :-
     db:tourists_visiting(Place, Quantity),
     (
         Quantity < 50 -> Factor is 1;
+        Quantity >= 50, Quantity < 100 -> triangle_down(50, 100, Quantity, Factor);
         Factor is 0
     ).
 
 some_tourists_visiting_range(Place, Factor) :-
     db:tourists_visiting(Place, Quantity),
     (
-        Quantity >= 50, Quantity < 500 -> Factor is 1;
+        Quantity >= 50, Quantity < 100 -> triangle_up(50, 100, Quantity, Factor);
+        Quantity >= 100, Quantity < 500 -> Factor is 1;
+        Quantity >= 500, Quantity < 800 -> triangle_down(500, 800, Quantity, Factor);
         Factor is 0
     ).
 
 many_tourists_visiting_range(Place, Factor) :- 
     db:tourists_visiting(Place, Quantity),
     (
-        Quantity >= 500 -> Factor is 1;
+        Quantity >= 500, Quantity < 800 -> triangle_up(500, 800, Quantity, Factor);
+        Quantity >= 800 -> Factor is 1;
         Factor is 0
     ).
 
-/* Age limit version 3 */
+/* Age limit */
 age_limit_factor(AgeLimit, Place, Factor) :-
 (
     db:age_limit(Place, AgeLimit) -> Factor is 1;
@@ -171,90 +187,35 @@ age_limit_factor(AgeLimit, Place, Factor) :-
 ).
 
 /* Meals */
-has_meal_factor(Meals, Place, Factor) :-
-(
-    Meals == not_important -> no_meal_factor(Place, Factor);
-    Meals == important -> meal_factor(Place, Factor)
-).
-
-no_meal_factor(Place, Factor) :- 
-(
-    Factor is 1
-).
-
-meal_factor(Place, Factor) :-
+has_meal_factor(Place, Factor) :-
 (
     db:has_meal(Place) -> Factor is 1;
     Factor is 0
 ).
 
 /* Rooms to sleep */
-has_rooms_too_sleep_factor(Rooms, Place, Factor) :-
-(
-    Rooms == not_important -> no_room_factor(Place, Factor);
-    Rooms == important -> room_factor(Place, Factor)
-).
-
-no_room_factor(Place, Factor) :-
-(
-    Factor is 1
-).
-
-room_factor(Place, Factor) :-
+has_rooms_to_sleep_factor(Place, Factor) :-
 (
     db:has_rooms_too_sleep(Place) -> Factor is 1;
     Factor is 0
 ).
 
 /* Toilets */
-has_toilet_factor(Toilets, Place, Factor) :-
-(
-    Toilets == not_important -> no_toilet_factor(Place, Factor);
-    Toilets == important -> toilet_factor(Place, Factor)
-).
-
-no_toilet_factor(Place, Factor) :-
-(
-    Factor is 1
-).
-
-toilet_factor(Place, Factor) :-
+has_toilet_factor(Place, Factor) :-
 (
     db:has_toilet(Place) -> Factor is 1;
     Factor is 0
 ).
 
 /* Parking */
-has_parking_factor(Parking, Place, Factor) :-
-(
-    Parking == not_important -> no_parking_factor(Place, Factor);
-    Parking == important -> parking_factor(Place, Factor)
-).
-
-no_parking_factor(Place, Factor) :-
-(
-    Factor is 1
-).
-
-parking_factor(Place, Factor) :-
+has_parking_factor(Place, Factor) :-
 (
     db:has_parking(Place) -> Factor is 1;
     Factor is 0
 ).
 
 /* Adjustment for disabled */
-adjusted_for_disabled_factor(Adjustment, Place, Factor) :-
-(
-    Adjustment == not_important -> no_adjustment_for_disabled_factor(Place, Factor);
-    Adjustment == important -> adjustment_for_disabled_factor(Place, Factor)
-).
-
-no_adjustment_for_disabled_factor(Place, Factor) :-
-(
-    Factor is 1
-).
-
-adjustment_for_disabled_factor(Place, Factor) :-
+adjusted_for_disabled_factor(Place, Factor) :-
 (
     db:adjusted_for_disabled(Place) -> Factor is 1;
     Factor is 0

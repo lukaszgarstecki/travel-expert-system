@@ -63,7 +63,7 @@ read_answers([
     read_has_rooms_to_sleep(HasRoomsToSleep),
     read_has_toilet(HasToilet),
     read_has_parking(HasParking),
-    read_adjusted_for_disabled(AdjustedForDisabled),
+    read_adjusted_for_disabled(AdjustedForDisabled).
 
 read_place(Name) :-
     format('~nWhat is the place name?~n'),
@@ -79,7 +79,7 @@ read_visit_time(VisitTime) :-
 
 read_climate(Climate) :-
 	format('~nWhat is the climate?~n'),
-	climat_list(Climates),
+	climate_list(Climates),
 	print_variables(Climates),
 	read(Climate).
 

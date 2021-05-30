@@ -51,35 +51,35 @@ get_price_factor(Price, Place, Factor) :-
     price_factor(Place, PriceFactor),
     Factor is 1 - abs(TargetFactor - PriceFactor).
 
-get_visit_time_factor(VisitTime, Place, VisitTimeFactor) :-
+get_visit_time_factor(VisitTime, Place, Factor) :-
     map_visit_time_to_factor(VisitTime, TargetFactor),
     visit_time_factor(Place, VisitTimeFactor),
     Factor is 1 - abs(TargetFactor - VisitTimeFactor).
 
-get_children_activities_factor(ChildrenActivities, Place, ChildrenActivitiesFactor) :-
+get_children_activities_factor(ChildrenActivities, Place, Factor) :-
     map_children_activities_range_to_factor(ChildrenActivities, TargetFactor),
     children_activities_factor(Place, ChildrenActivitiesFactor),
     Factor is 1 - abs(TargetFactor - ChildrenActivitiesFactor).
 
-get_tourists_visiting_factor(TouristsVisiting, Place, TouristsVisitingFactor) :-
+get_tourists_visiting_factor(TouristsVisiting, Place, Factor) :-
     map_tourists_visiting_range_to_factor(TouristsVisiting, TargetFactor),
     tourists_visiting_factor(Place, TouristsVisitingFactor),
     Factor is 1 - abs(TargetFactor - TouristsVisitingFactor).
 
-get_age_limit_factor(AgeLimit, Place, AgeLimitFactor) :-
-    age_limit_factor(AgeLimit, Place, AgeLimitFactor).
+get_age_limit_factor(AgeLimit, Place, Factor) :-
+    age_limit_factor(AgeLimit, Place, Factor).
 
-get_meals_factor(Meals, Place, MealsFactor) :-
-    has_meal_factor(Meals, Place, MealsFactor).
+get_meals_factor(Meals, Place, Factor) :-
+    has_meal_factor(Meals, Place, Factor).
 
 get_rooms_factor(Rooms, Place, Factor) :-
-    has_rooms_too_sleep_factor(Rooms, Place, RoomsFactor).
+    has_rooms_to_sleep_factor(Rooms, Place, Factor).
 
-get_toilets_factor(Toilets, Place, ToiletsFactor) :-
-    has_toilet_factor(Toilets, Place, ToiletsFactor).
+get_toilets_factor(Toilets, Place, Factor) :-
+    has_toilet_factor(Toilets, Place, Factor).
 
-get_parking_factor(Parking, Place, ParkingFactor) :-
-    has_parking_factor(Parking, Place, ParkingFactor).
+get_parking_factor(Parking, Place, Factor) :-
+    has_parking_factor(Parking, Place, Factor).
 
-get_adjusted_for_disabled_factor(AdjustmentForDisabled, Place, AdjustmentFactor) :-
-    adjusted_for_disabled_factor(AdjustmentForDisabled, Place, AdjustmentFactor).
+get_adjusted_for_disabled_factor(AdjustmentForDisabled, Place, Factor) :-
+    adjusted_for_disabled_factor(AdjustmentForDisabled, Place, Factor).
