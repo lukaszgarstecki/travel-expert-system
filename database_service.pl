@@ -4,7 +4,7 @@
 update_place(Place, Attributes) :-
     delete_place(Place),
     insert_place(Place, Attributes),
-	commit.
+    commit.
 
 
 insert_place(
@@ -33,29 +33,29 @@ insert_place(
         HasToilet == yes -> assertz(db:has_toilet(Place));
         true
     ),
-	(
+    (
         HasParking == yes -> assertz(db:has_parking(Place));
         true
     ),
-	(
+    (
         AdjustedForDisabled == yes -> assertz(db:adjusted_for_disabled(Place));
         true
     ),
-	commit.
+    commit.
 
 delete_place(Place) :-
-	retractall(db:price(Place,_)),
-	retractall(db:visit_time(Place,_)),
-	retractall(db:climate(Place, _)),
-	retractall(db:activities_for_children(Place,_)),
-	retractall(db:tourists_visiting(Place,_)),
-	retractall(db:age_limit(Place, _)),
-	retractall(db:has_meal(Place,_)),
-	retractall(db:has_rooms_to_sleep(Place)),
-	retractall(db:has_toilet(Place, _)),
-	retractall(db:has_parking(Place)),
-	retractall(db:adjusted_for_disabled(Place)),
-	commit.
+    retractall(db:price(Place,_)),
+    retractall(db:visit_time(Place,_)),
+    retractall(db:climate(Place, _)),
+    retractall(db:activities_for_children(Place,_)),
+    retractall(db:tourists_visiting(Place,_)),
+    retractall(db:age_limit(Place, _)),
+    retractall(db:has_meal(Place,_)),
+    retractall(db:has_rooms_to_sleep(Place)),
+    retractall(db:has_toilet(Place, _)),
+    retractall(db:has_parking(Place)),
+    retractall(db:adjusted_for_disabled(Place)),
+    commit.
 
 
 commit :-

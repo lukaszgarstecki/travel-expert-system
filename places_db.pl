@@ -97,12 +97,12 @@ has_meal(domek_w_bieszczadach).
 has_meal(camping_w_mielnie).
 has_meal(agroturystyka).
 
-:- dynamic has_rooms_too_sleep/1.
+:- dynamic has_rooms_to_sleep/1.
 
-has_rooms_too_sleep(spa_resort).
-has_rooms_too_sleep(domek_w_bieszczadach).
-has_rooms_too_sleep(camping_w_mielnie).
-has_rooms_too_sleep(agroturystyka).
+has_rooms_to_sleep(spa_resort).
+has_rooms_to_sleep(domek_w_bieszczadach).
+has_rooms_to_sleep(camping_w_mielnie).
+has_rooms_to_sleep(agroturystyka).
 
 :- dynamic has_toilet/1.
 
