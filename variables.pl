@@ -12,9 +12,9 @@
     ]).
 
 
-price_list([ cheap, medium, expensive]).
+price_list([cheap, medium, expensive]).
 visit_time_list([short, medium, long]).
-climate_list([kontynentalny, górski, morski]).
+climate_list([kontynentalny, gorski, morski]).
 children_activities_list([few, some, many]).
 tourists_visiting_list([few, some, many]).
 age_limit_list([brak, nastolatkowie, z_rodzicem, dorosli]).

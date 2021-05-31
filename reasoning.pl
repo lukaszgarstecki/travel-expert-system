@@ -106,9 +106,9 @@ children_activities_factor(Place, Factor) :-
     few_children_activities_range(Place, FewFactor),
     some_children_activities_range(Place, SomeFactor),
     many_children_activities_range(Place, ManyFactor),
-    map_children_activities_range_to_factor(short, FewMappedFactor),
-    map_children_activities_range_to_factor(medium, SomeMappedFactor),
-    map_children_activities_range_to_factor(long, ManyMappedFactor),
+    map_children_activities_range_to_factor(few, FewMappedFactor),
+    map_children_activities_range_to_factor(some, SomeMappedFactor),
+    map_children_activities_range_to_factor(many, ManyMappedFactor),
     sharpen(
         [FewFactor, SomeFactor, ManyFactor],
         [FewMappedFactor, SomeMappedFactor, ManyMappedFactor],
@@ -145,9 +145,9 @@ tourists_visiting_factor(Place, Factor) :-
     few_tourists_visiting_range(Place, FewFactor),
     some_tourists_visiting_range(Place, SomeFactor),
     many_tourists_visiting_range(Place, ManyFactor),
-    map_tourists_visiting_range_to_factor(short, FewMappedFactor),
-    map_tourists_visiting_range_to_factor(medium, SomeMappedFactor),
-    map_tourists_visiting_range_to_factor(long, ManyMappedFactor),
+    map_tourists_visiting_range_to_factor(few, FewMappedFactor),
+    map_tourists_visiting_range_to_factor(some, SomeMappedFactor),
+    map_tourists_visiting_range_to_factor(many, ManyMappedFactor),
     sharpen(
         [FewFactor, SomeFactor, ManyFactor],
         [FewMappedFactor, SomeMappedFactor, ManyMappedFactor],
@@ -196,7 +196,7 @@ has_meal_factor(Place, Factor) :-
 /* Rooms to sleep */
 has_rooms_to_sleep_factor(Place, Factor) :-
 (
-    db:has_rooms_too_sleep(Place) -> Factor is 1;
+    db:has_rooms_to_sleep(Place) -> Factor is 1;
     Factor is 0
 ).
 
