@@ -50,9 +50,9 @@ delete_place(Place) :-
     retractall(db:activities_for_children(Place,_)),
     retractall(db:tourists_visiting(Place,_)),
     retractall(db:age_limit(Place, _)),
-    retractall(db:has_meal(Place,_)),
+    retractall(db:has_meal(Place)),
     retractall(db:has_rooms_to_sleep(Place)),
-    retractall(db:has_toilet(Place, _)),
+    retractall(db:has_toilet(Place)),
     retractall(db:has_parking(Place)),
     retractall(db:adjusted_for_disabled(Place)),
     commit.
